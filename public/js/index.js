@@ -7,5 +7,18 @@ socket.on('disconnect', function() {
   console.log('Disconnected from server');
 });
 socket.on('newMessage', function(newMessage) {
-  console.log('New message', newMessage);
+  var li = jQuery('<li></li>');
+  li.text(`From: ${newMessage.from}: ${newMessage.text}`);
+  console.log(li);
+  jQuery('#messages').append(li);
+});
+
+jQuery('#message-form').on('submit', function(e) {
+  e.preventDefault();
+  socket.emit('createMessage', {
+    from: 'User',
+    text: jQuery('[name=message]').val()
+  }, function() {
+
+  });
 });
