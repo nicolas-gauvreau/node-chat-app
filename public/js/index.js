@@ -7,14 +7,16 @@ socket.on('disconnect', function() {
   console.log('Disconnected from server');
 });
 socket.on('newMessage', function(newMessage) {
+  var formattedTime = moment(newMessage.createdAt).format('h:mm a');
   var li = jQuery('<li></li>');
-  li.text(`From: ${newMessage.from}: ${newMessage.text}`);
+  li.text(`${newMessage.from} ${formattedTime}: ${newMessage.text}`);
   jQuery('#messages').append(li);
 });
 socket.on('newLocationMessage', function(newMessage) {
+  var formattedTime = moment(newMessage.createdAt).format('h:mm a');
   var li = jQuery('<li></li>');
   var a = jQuery('<a target="_blank">My current location</a>');
-  li.text(`From: ${newMessage.from}:`);
+  li.text(`${newMessage.from} ${formattedTime}:`);
   a.attr('href', newMessage.url);
   li.append(a);
   jQuery('#messages').append(li);
@@ -53,7 +55,7 @@ locationButton.on('click', function(e) {
   }, function () {
     locationButton.removeAttr('disabled');
     locationButton.text('Send location');
-    
+
     alert('Unable to fetch location.');
   });
 });
