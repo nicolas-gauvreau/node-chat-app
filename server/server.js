@@ -31,12 +31,7 @@ io.on('connection', (socket) => {
     socket.emit('newMessage', generateMessage('Admin', `${user.name}, welcome to Chat-App`));
     socket.broadcast.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} joined`));
     io.to(user.room).emit('updateUserList', users.getUserList(user.room));
-    // socket.leave(room-name);
-
-    // io.emit               -> io.to(room-name).emit
-    // socket.broadcast.emit -> socket.broadcast.to(room-name).emit
-    // socket.emit
-
+    
     callback();
   });
 
@@ -51,7 +46,9 @@ io.on('connection', (socket) => {
 
   socket.on('createLocationMessage', (coords) => {
     var user = users.getUser(socket.id);
-    io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude));
+    if (user) {
+      io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude));
+    }
   });
 
   socket.on('disconnect', () => {
@@ -60,7 +57,6 @@ io.on('connection', (socket) => {
       io.to(user.room).emit('updateUserList', users.getUserList(user.room));
       io.to(user.room).emit('newMessage', generateMessage('Admin', `User ${user.name} has left the room.`))
     }
-    console.log('User disconnected');
   });
 });
 
